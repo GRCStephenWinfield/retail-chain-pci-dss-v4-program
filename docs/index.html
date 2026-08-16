@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Marketa Retail Group — PCI DSS v4.0.1 Programme Dashboard</title>
+<style>
+
+:root{
+  --bg:#f4f6fa; --panel:#ffffff; --ink:#16202e; --muted:#5d6b7f; --line:#dde3ec;
+  --navy:#1f3864; --teal:#0f766e; --green:#15803d; --amber:#b45309; --red:#b91c1c;
+  --greenbg:#e8f6ec; --amberbg:#fdf3dc; --redbg:#fdeaea; --bluebg:#e9eff9;
+  --shadow:0 1px 2px rgba(16,32,64,.06),0 8px 24px rgba(16,32,64,.06);
+}
+html[data-theme="dark"]{
+  --bg:#0e1420; --panel:#151d2c; --ink:#e6ecf5; --muted:#9aa8bd; --line:#26324a;
+  --navy:#7ea2e0; --teal:#4fd1c5; --green:#4ade80; --amber:#fbbf24; --red:#f87171;
+  --greenbg:#12301e; --amberbg:#33270a; --redbg:#3a1414; --bluebg:#152239;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 20px 80px}
+header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:8px}
+h1{font-size:clamp(20px,2.6vw,30px);margin:0 0 4px;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:14px;margin:0}
+.badgerow{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 26px}
+.badge{font-size:12px;font-weight:650;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel)}
+.b-green{background:var(--greenbg);color:var(--green);border-color:transparent}
+.b-amber{background:var(--amberbg);color:var(--amber);border-color:transparent}
+.b-red{background:var(--redbg);color:var(--red);border-color:transparent}
+.b-navy{background:var(--bluebg);color:var(--navy);border-color:transparent}
+button.toggle{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:999px;
+  padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
+button.toggle:hover{border-color:var(--navy)}
+.grid{display:grid;gap:16px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:980px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}}
+@media(max-width:560px){.g4{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.kpi .n{font-size:30px;font-weight:750;letter-spacing:-.02em;line-height:1.1}
+.kpi .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:650;margin-top:6px}
+.kpi .d{font-size:12.5px;color:var(--muted);margin-top:7px}
+.kpi.ok .n{color:var(--green)} .kpi.warn .n{color:var(--amber)} .kpi.bad .n{color:var(--red)} .kpi.info .n{color:var(--navy)}
+h2{font-size:17px;margin:34px 0 12px;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+h2::before{content:"";width:4px;height:17px;background:var(--navy);border-radius:2px;display:inline-block}
+h3{font-size:14px;margin:0 0 12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;background:var(--navy);color:#fff;padding:9px 11px;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+html[data-theme="dark"] th{color:#0e1420}
+td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:nth-child(even){background:rgba(127,145,180,.06)}
+tbody tr:hover{background:var(--bluebg)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.p-g{background:var(--greenbg);color:var(--green)} .p-a{background:var(--amberbg);color:var(--amber)}
+.p-r{background:var(--redbg);color:var(--red)} .p-n{background:var(--bluebg);color:var(--navy)}
+.bar{height:9px;background:var(--line);border-radius:5px;overflow:hidden;margin-top:7px}
+.bar>i{display:block;height:100%;border-radius:5px}
+.callout{border-left:4px solid var(--red);background:var(--redbg);padding:14px 18px;border-radius:0 10px 10px 0;margin:16px 0}
+.callout.good{border-left-color:var(--green);background:var(--greenbg)}
+.callout.note{border-left-color:var(--navy);background:var(--bluebg)}
+.callout p{margin:0;font-size:14px}
+.callout strong{font-weight:750}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
+.lg span{display:flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:900px){.phases{grid-template-columns:1fr}}
+a.ph{display:block;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:14px 16px;transition:.15s;box-shadow:var(--shadow)}
+a.ph:hover{border-color:var(--navy);transform:translateY(-2px)}
+a.ph .num{font-size:11px;font-weight:750;color:var(--navy);letter-spacing:.08em}
+a.ph .ttl{font-weight:680;font-size:14.5px;margin:3px 0 5px}
+a.ph .out{font-size:12.5px;color:var(--muted)}
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.small{font-size:12.5px;color:var(--muted);margin-top:10px}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <h1>Marketa Retail Group &mdash; PCI DSS v4.0.1 Compliance Programme</h1>
+    <p class="sub">Executive dashboard &#183; programme period 2026-01-12 &rarr; 2027-06-30 &#183; Level 1 merchant, 68.4M card transactions &#183; <em>illustrative portfolio sample, all figures fictional</em></p>
+  </div>
+  <button class="toggle" id="tt">&#127769; Dark mode</button>
+</header>
+
+<div class="badgerow">
+  <span class="badge b-red">2026 AOC NON-COMPLIANT</span>
+  <span class="badge b-green">Compliant at re-assessment 2027-02-18</span>
+  <span class="badge b-green">306 assessed &#183; 0 Not Tested</span>
+  <span class="badge b-navy">Scope &minus;88.2% &#183; 604 &rarr; 71</span>
+  <span class="badge b-amber">Close forecast missed by 3</span>
+  <span class="badge b-red">IR capability never proved</span>
+</div>
+
+<div class="callout">
+  <p><strong>The honest headline.</strong> Marketa told its acquirer it did not meet two PCI DSS requirements &mdash; <strong>twenty days before it had to tell it anything</strong> &mdash; and then met them. Neither finding was discovered by the assessor: both were on Marketa&rsquo;s own register months before fieldwork, and in both cases a compensating control was drafted and <strong>withdrawn rather than argued</strong>. The compliant re-assessment of 2027-02-18 did <strong>not</strong> withdraw the non-compliant attestation.</p>
+</div>
+
+<div class="callout note">
+  <p><strong>And the register missed its own published forecast by three entries.</strong> Under this register&rsquo;s discipline &mdash; a rating moves on <em>likelihood</em> unless the <em>consequence</em> changed, and a likelihood of 1 is reserved for events that are not reasonably foreseeable &mdash; <strong>an entry scored 3 &times; 4 reaches 2 &times; 4 = 8 and stops. Eight is a floor.</strong> The Phase 03 forecast moved thirteen entries across a boundary the arithmetic does not permit. The close is <strong>0 &#183; 16 &#183; 28</strong> against a published <strong>0 &#183; 13 &#183; 31</strong>, and the final phase publishes the arithmetic rather than the excuse.</p>
+</div>
+
+<h2>Programme at a glance</h2>
+<div class="grid g4">
+  <div class="card kpi ok"><div class="n">0</div><div class="l">High risks at close</div><div class="d">From 9 at baseline &#183; none ever accepted by the CFO</div></div>
+  <div class="card kpi bad"><div class="n">2</div><div class="l">Not in Place</div><div class="d">8.6.2 and 11.3.1.2 &#183; both found by Marketa, not the assessor</div></div>
+  <div class="card kpi info"><div class="n">71</div><div class="l">Assessed components</div><div class="d">8 CDE + 63 connected-to &#183; from 604 believed in scope</div></div>
+  <div class="card kpi ok"><div class="n">86.9%</div><div class="l">Evidence from existing artefacts</div><div class="d">186 of 214 assessor requests &#183; 0 unsatisfied</div></div>
+  <div class="card kpi ok"><div class="n">19 / 19</div><div class="l">Pen test findings re-tested</div><div class="d">By the tester that found them &#183; 1 closed only at second re-test</div></div>
+  <div class="card kpi warn"><div class="n">16</div><div class="l">Moderate at close</div><div class="d">Forecast 13 &#183; three short, and 09.12 says why</div></div>
+  <div class="card kpi ok"><div class="n">$4.588M</div><div class="l">Programme cost</div><div class="d">Of a $4.6M envelope &#183; 0.11% of revenue &#183; $0.067 per transaction</div></div>
+  <div class="card kpi bad"><div class="n">1</div><div class="l">Open item not closed</div><div class="d">Truvance declined a response-time commitment &#183; not re-worded</div></div>
+</div>
+
+<h2>Risk register &mdash; 44 risks across nine phases</h2>
+<div class="card">
+  <svg viewBox="0 0 940 330" role="img" aria-label="Risk register trajectory across phases 3 to 9">
+<line x1="52" y1="286.0" x2="922" y2="286.0" stroke="var(--line)" stroke-width="1"/><text x="43" y="290.0" text-anchor="end" font-size="11" fill="var(--muted)">0</text><line x1="52" y1="196.7" x2="922" y2="196.7" stroke="var(--line)" stroke-width="1"/><text x="43" y="200.7" text-anchor="end" font-size="11" fill="var(--muted)">10</text><line x1="52" y1="107.3" x2="922" y2="107.3" stroke="var(--line)" stroke-width="1"/><text x="43" y="111.3" text-anchor="end" font-size="11" fill="var(--muted)">20</text><line x1="52" y1="18.0" x2="922" y2="18.0" stroke="var(--line)" stroke-width="1"/><text x="43" y="22.0" text-anchor="end" font-size="11" fill="var(--muted)">30</text><text x="52.0" y="314" text-anchor="middle" font-size="11.5" fill="var(--muted)">P03</text><text x="197.0" y="314" text-anchor="middle" font-size="11.5" fill="var(--muted)">P04</text><text x="342.0" y="314" text-anchor="middle" font-size="11.5" fill="var(--muted)">P05</text><text x="487.0" y="314" text-anchor="middle" font-size="11.5" fill="var(--muted)">P06</text><text x="632.0" y="314" text-anchor="middle" font-size="11.5" fill="var(--muted)">P07</text><text x="777.0" y="314" text-anchor="middle" font-size="11.5" fill="var(--muted)">P08</text><text x="922.0" y="314" text-anchor="middle" font-size="11.5" fill="var(--muted)">P09</text>
+<path d="M52.0,98.4 L197.0,98.4 L342.0,98.4 L487.0,116.3 L632.0,89.5 L777.0,71.6 L922.0,143.1" fill="none" stroke="var(--amber)" stroke-width="2.5"/><circle cx="52.0" cy="98.4" r="4" fill="var(--amber)"/><circle cx="197.0" cy="98.4" r="4" fill="var(--amber)"/><circle cx="342.0" cy="98.4" r="4" fill="var(--amber)"/><circle cx="487.0" cy="116.3" r="4" fill="var(--amber)"/><circle cx="632.0" cy="89.5" r="4" fill="var(--amber)"/><circle cx="777.0" cy="71.6" r="4" fill="var(--amber)"/><circle cx="922.0" cy="143.1" r="4" fill="var(--amber)"/>
+<path d="M52.0,160.9 L197.0,160.9 L342.0,160.9 L487.0,125.2 L632.0,107.3 L777.0,107.3 L922.0,35.9" fill="none" stroke="var(--green)" stroke-width="2.5"/><circle cx="52.0" cy="160.9" r="4" fill="var(--green)"/><circle cx="197.0" cy="160.9" r="4" fill="var(--green)"/><circle cx="342.0" cy="160.9" r="4" fill="var(--green)"/><circle cx="487.0" cy="125.2" r="4" fill="var(--green)"/><circle cx="632.0" cy="107.3" r="4" fill="var(--green)"/><circle cx="777.0" cy="107.3" r="4" fill="var(--green)"/><circle cx="922.0" cy="35.9" r="4" fill="var(--green)"/>
+<path d="M52.0,205.6 L197.0,205.6 L342.0,205.6 L487.0,223.5 L632.0,268.1 L777.0,286.0 L922.0,286.0" fill="none" stroke="var(--red)" stroke-width="2.5"/><circle cx="52.0" cy="205.6" r="4" fill="var(--red)"/><circle cx="197.0" cy="205.6" r="4" fill="var(--red)"/><circle cx="342.0" cy="205.6" r="4" fill="var(--red)"/><circle cx="487.0" cy="223.5" r="4" fill="var(--red)"/><circle cx="632.0" cy="268.1" r="4" fill="var(--red)"/><circle cx="777.0" cy="286.0" r="4" fill="var(--red)"/><circle cx="922.0" cy="286.0" r="4" fill="var(--red)"/>
+<line x1="922.0" y1="18" x2="922.0" y2="286" stroke="var(--navy)" stroke-width="1" stroke-dasharray="4 4" opacity=".55"/>
+<text x="914.0" y="31" text-anchor="end" font-size="11" font-weight="700" fill="var(--navy)">close</text>
+<line x1="52" y1="169.9" x2="922" y2="169.9" stroke="var(--navy)" stroke-width="1.5" stroke-dasharray="6 5" opacity=".7"/>
+<text x="470" y="162.9" text-anchor="middle" font-size="11" font-weight="700" fill="var(--navy)">forecast Moderate at close = 13 &#183; actual 16</text>
+</svg>
+  <div class="lg"><span><i class="sw" style="background:var(--red)"></i>High (9 &rarr; 0)</span><span><i class="sw" style="background:var(--amber)"></i>Moderate (21 &rarr; 16)</span><span><i class="sw" style="background:var(--green)"></i>Low (14 &rarr; 28)</span></div>
+  <p class="small"><strong>Phases 04 and 05 are deliberately flat.</strong> Two consecutive phases delivered Requirements 2 through 9 and moved <em>zero</em> ratings, on a rule applied without exception: a control published in July has no operating history, and operating history is what a rating moves on. <strong>Moderate rises at Phases 07 and 08</strong> as High entries arrive from above &mdash; which is what an honest register looks like when risks come down one band at a time.</p>
+</div>
+
+<h2>The forecast, and the miss</h2>
+<div class="card">
+  <table><thead><tr><th>Line</th><th>Entries</th><th>Count</th></tr></thead><tbody>
+  <tr><td>Forecast Moderate &rarr; Low, delivered in Phase 06</td><td>R-10, R-19, R-26, R-34</td><td>4</td></tr><tr><td>Forecast Moderate &rarr; Low, delivered in Phase 09</td><td>R-08, R-18, R-21, R-22, R-23, R-32</td><td>6</td></tr><tr><td>Forecast Moderate &rarr; Low, <b>not delivered</b></td><td><b>R-04, R-28, R-33</b> &mdash; all three scored <b>3 &times; 4</b></td><td><b>3</b></td></tr><tr><td>Forecast High &rarr; <b>Low</b>, delivered to <b>Moderate 8</b></td><td><b>R-17, R-36</b> &mdash; both arrive at <b>2 &times; 4</b></td><td><b>2</b></td></tr><tr><td>Not forecast to move, but reached Low</td><td><b>R-13, R-15</b></td><td><b>+2</b></td></tr><tr><td><b>Net</b></td><td></td><td><b>+3 &rarr; 16 Moderate</b></td></tr>
+  </tbody></table>
+  <p class="small">The forecast was written in <strong>month seven of an eighteen-month programme</strong>, before the scoring discipline had been tested against a single year of evidence. <strong>Two forecasts were published in advance and both were missed</strong> &mdash; 06.12 &sect;7 predicted R-17 and R-36 reaching Low, 08.13 &sect;6.3 corrected it and warned the next phase, and 09.12 &sect;3 reported the result.</p>
+</div>
+
+<h2>Programme scorecard</h2>
+<div class="card">
+  <table><thead><tr><th>Dimension</th><th>Result</th><th>Status</th></tr></thead><tbody>
+  <tr><td>2026 Attestation of Compliance</td><td>NON-COMPLIANT, filed 2026-12-11 &mdash; twenty days early, with an honest Part 4</td><td><span class="pill p-r">RED</span></td></tr><tr><td>2027 re-assessment</td><td>COMPLIANT 2027-02-18 &#183; 299 &#183; 3 &#183; 4 &#183; 0 &#183; <b>0</b> &#183; the 2026 attestation <b>not withdrawn</b></td><td><span class="pill p-g">GREEN</span></td></tr><tr><td>Who found the two findings</td><td><b>Marketa did</b> &mdash; June and July, months before fieldwork. The assessor confirmed them</td><td><span class="pill p-g">GREEN</span></td></tr><tr><td>Scope</td><td>1,842 systems &rarr; 604 believed &rarr; <b>71 assessed</b> &#183; &minus;88.2%</td><td><span class="pill p-g">GREEN</span></td></tr><tr><td>Penetration testing</td><td>19 findings (2C/5H/7M/5L) &#183; all remediated &#183; <b>all re-tested by the tester that found them</b></td><td><span class="pill p-g">GREEN</span></td></tr><tr><td>ASV scanning</td><td>4 quarterly cycles &#183; <b>Q1 FAILED</b> and was reported to the acquirer as a failure</td><td><span class="pill p-a">AMBER</span></td></tr><tr><td>Segmentation testing</td><td><b>First test FAILED</b> at store 0417, latent at 37 stores &#183; second annual test 0 findings from Z3</td><td><span class="pill p-a">AMBER</span></td></tr><tr><td>Risk register at close</td><td>44 entries &#183; 9 High at baseline &rarr; <b>0 High &#183; 16 Moderate &#183; 28 Low</b></td><td><span class="pill p-a">AMBER</span></td></tr><tr><td>Against the published forecast</td><td>Forecast 0 &#183; 13 &#183; 31 &#183; actual 0 &#183; 16 &#183; 28 &mdash; <b>THREE SHORT</b>, and 09.12 publishes the arithmetic</td><td><span class="pill p-r">RED</span></td></tr><tr><td>Open items at close</td><td>11 &#183; 8 closed on time &#183; 2 closed late &#183; <b>1 NOT CLOSED &mdash; the provider declined</b></td><td><span class="pill p-a">AMBER</span></td></tr><tr><td>Assessor observations</td><td>17 &#183; 11 adopted &#183; 3 adopted with amendment &#183; <b>3 declined in writing</b> &#183; 0 unanswered</td><td><span class="pill p-g">GREEN</span></td></tr><tr><td>Cost</td><td><b>$4,588,000</b> of a $4,600,000 envelope over 17.6 months &#183; 0.11% of revenue &#183; $0.067 per transaction</td><td><span class="pill p-g">GREEN</span></td></tr><tr><td>Incident response proved against a real compromise</td><td><b>NEVER HAPPENED.</b> 512 incident records &#183; 0 SEV-1 &#183; <b>R-43 has not moved in nine phases</b></td><td><span class="pill p-r">RED</span></td></tr>
+  </tbody></table>
+</div>
+
+<h2>Scope reduction &mdash; the number the whole programme rests on</h2>
+<div class="grid g2">
+  <div class="card"><svg viewBox="0 0 940 200" role="img" aria-label="Scope reduction from 1842 systems to 71 assessed"><text x="0" y="36" font-size="12.5" fill="var(--muted)">Enterprise estate</text><rect x="230" y="18" width="640.0" height="26" rx="5" fill="var(--navy)"/><text x="880.0" y="37" font-size="13.5" font-weight="700" fill="var(--ink)">1,842</text><text x="0" y="88" font-size="12.5" fill="var(--muted)">Believed in scope</text><rect x="230" y="70" width="209.9" height="26" rx="5" fill="var(--navy)"/><text x="449.9" y="89" font-size="13.5" font-weight="700" fill="var(--ink)">604</text><text x="0" y="140" font-size="12.5" fill="var(--muted)">Assessed (8 CDE + 63 connected-to)</text><rect x="230" y="122" width="24.7" height="26" rx="5" fill="var(--teal)"/><text x="264.7" y="141" font-size="13.5" font-weight="700" fill="var(--ink)">71</text><text x="230" y="186" font-size="12" font-weight="700" fill="var(--teal)">&#8722;88.2% via P2PE, tokenization and DTMF masking</text></svg>
+    <p class="small"><strong>Scope reduction is not risk reduction.</strong> The data still exists &mdash; it is held by somebody else. Six providers operate most of the controls that make the reduction true, and <strong>three of them sit between Marketa and its ability to accept payment at all.</strong></p></div>
+  <div class="card">
+    <h3>The 306 by disposition</h3>
+    <svg viewBox="0 0 300 300" role="img" aria-label="306 sub-requirements by disposition"><path d="M150.00,40.00 A110,110 0 1 1 129.79,41.87" fill="none" stroke="var(--green)" stroke-width="34"/><path d="M129.79,41.87 A110,110 0 0 1 136.48,40.83" fill="none" stroke="var(--amber)" stroke-width="34"/><path d="M136.48,40.83 A110,110 0 0 1 145.48,40.09" fill="none" stroke="var(--navy)" stroke-width="34"/><path d="M145.48,40.09 A110,110 0 0 1 150.00,40.00" fill="none" stroke="var(--red)" stroke-width="34"/>
+<text x="150" y="142" text-anchor="middle" font-size="40" font-weight="750" fill="var(--ink)">306</text>
+<text x="150" y="166" text-anchor="middle" font-size="12" fill="var(--muted)">sub-requirements</text>
+<text x="150" y="186" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--red)">2 NOT IN PLACE</text></svg>
+    <div class="lg"><span><i class="sw" style="background:var(--green)"></i>In Place 297</span><span><i class="sw" style="background:var(--amber)"></i>Compensating 3</span><span><i class="sw" style="background:var(--navy)"></i>N/A 4</span><span><i class="sw" style="background:var(--red)"></i>Not in Place 2</span></div>
+    <p class="small"><strong>Not Tested: 0.</strong> Prohibited by ADR-0004 <em>before the programme began</em>.</p>
+  </div>
+</div>
+
+<h2>Where the non-compliance actually came from</h2>
+<div class="callout note">
+  <p><strong>Three of the five recorded exceptions trace to the same nine devices and the same support agreement</strong> &mdash; the 11.3.1.2 finding, CCW-01 at 8.3.6, CCW-02 at 2.2.7 &mdash; and those nine were also the only population the assessor was <strong>not permitted to sample</strong>, because standardisation could not be demonstrated. One commercial decision, signed years before the programme started, produced more assessed exceptions than every control gap in the estate combined. <strong>Not a compliance failure &mdash; a contract nobody had read as a security control.</strong></p>
+</div>
+<div class="callout">
+  <p><strong>And the remediation removed the finding, not the constraint.</strong> The Verition amendment of 2027-01-08 granted credential release, not firmware change. <strong>CCW-01 and CCW-02 both survive the re-assessment</strong> and the compensating-control count stays at three. R-36&rsquo;s residual did not disappear &mdash; <strong>it changed shape, from technical to contractual</strong>, and a control that depends on a clause has a renewal date.</p>
+</div>
+
+<h2>Seven impact reductions in eighteen months, all named</h2>
+<div class="card">
+  <table><thead><tr><th>Phase</th><th>Risk</th><th>Impact</th><th>The change in consequence that justified it</th></tr></thead><tbody>
+  <tr><td>06</td><td>R-10</td><td>4 &rarr; 3</td><td>A suspension rule recorded <b>in advance</b></td></tr><tr><td>07</td><td>R-14</td><td>4 &rarr; 3</td><td>The proved path ran <b>Z7 to Z5</b>, not into the CDE</td></tr><tr><td>07</td><td>R-31</td><td>4 &rarr; 3</td><td>The historical corpus <b>destroyed and evidenced</b></td></tr><tr><td>09</td><td>R-23</td><td><b>5 &rarr; 3</b></td><td>The MOTO channel now <b>stops</b> rather than accepting unmasked</td></tr><tr><td>09</td><td>R-08</td><td>4 &rarr; 3</td><td>Account data lands in a <b>quarantine</b>, not in a store</td></tr><tr><td>09</td><td>R-18</td><td>4 &rarr; 3</td><td><b>No privileged session exists</b> on the workstation to steal</td></tr><tr><td>09</td><td>R-32</td><td>4 &rarr; 3</td><td>The exposure window is <b>bounded at 24 hours</b></td></tr>
+  </tbody></table>
+  <p class="small"><strong>Impact has never been reduced as a way of moving a score that likelihood would not move.</strong> Architecture changes consequences; operations change likelihood &mdash; which is why the final four months carry four of the seven.</p>
+</div>
+
+<h2>Cost of compliance</h2>
+<div class="grid g2">
+  <div class="card"><table><thead><tr><th>Line</th><th>Budget</th><th>Actual</th><th>Variance</th></tr></thead><tbody>
+  <tr><td>QSA assessment</td><td>$385,000</td><td>$429,000</td><td>+$44,000 &mdash; the re-assessment</td></tr><tr><td>ASV scanning</td><td>$28,000</td><td>$28,000</td><td>$0</td></tr><tr><td>Penetration testing</td><td>$165,000</td><td>$178,500</td><td>+$13,500</td></tr><tr><td>Security tooling</td><td>$1,240,000</td><td>$1,193,000</td><td>&minus;$47,000</td></tr><tr><td>Segmentation build</td><td>$890,000</td><td>$967,000</td><td>+$77,000</td></tr><tr><td>Internal labour</td><td>$1,610,000</td><td>$1,704,000</td><td>+$94,000</td></tr><tr><td>Training and awareness</td><td>$95,000</td><td>$88,500</td><td>&minus;$6,500</td></tr><tr><td>Contingency</td><td>$187,000</td><td>$175,000 drawn</td><td>$12,000 unused</td></tr><tr><td><b>Total</b></td><td><b>$4,600,000</b></td><td><b>$4,588,000</b></td><td><b>&minus;$12,000</b></td></tr>
+  </tbody></table></div>
+  <div class="card">
+    <h3>Three framings an executive can act on</h3>
+    <div class="grid g2" style="gap:12px">
+      <div class="card kpi info" style="box-shadow:none"><div class="n">0.11%</div><div class="l">Of $4.2B revenue</div></div>
+      <div class="card kpi info" style="box-shadow:none"><div class="n">$0.067</div><div class="l">Per card transaction</div></div>
+      <div class="card kpi info" style="box-shadow:none"><div class="n">$14,993</div><div class="l">Per sub-requirement</div></div>
+      <div class="card kpi warn" style="box-shadow:none"><div class="n">4.2</div><div class="l">BAU FTE (from 11.9)</div></div>
+    </div>
+    <p class="small">The programme ran at <strong>11.9 FTE</strong> and business as usual is <strong>4.2</strong>. <strong>The controls do not know that.</strong> 09.08 &sect;6 names the obligations where the honest answer is that <em>less will be done</em>, rather than that the same will be done more efficiently.</p>
+    <p class="small"><strong>No fine, fee schedule or penalty amount appears anywhere in this repository.</strong> Every figure is a cost of assurance.</p>
+  </div>
+</div>
+
+<h2>The nine phases</h2>
+<div class="phases"><a class="ph" href="../01-program-foundation-pci-governance/01.00-README.md"><div class="num">PHASE 01</div><div class="ttl">Program Foundation &amp; PCI Governance</div><div class="out">ADR-0004 makes a &ldquo;Not Tested&rdquo; disposition unavailable in month one</div></a><a class="ph" href="../02-cde-scoping-cardholder-data-discovery/02.00-README.md"><div class="num">PHASE 02</div><div class="ttl">CDE Scoping &amp; Cardholder Data Discovery</div><div class="out">4 unexpected PAN locations &#183; scope cut 604 &rarr; 71 &#183; R-31 raised on evidence</div></a><a class="ph" href="../03-network-segmentation-architecture/03.00-README.md"><div class="num">PHASE 03</div><div class="ttl">Network Segmentation Architecture</div><div class="out">The first segmentation test FAILED &#183; R-14 raised with a published exit criterion</div></a><a class="ph" href="../04-build-maintain-secure-systems/04.00-README.md"><div class="num">PHASE 04</div><div class="ttl">Build &amp; Maintain Secure Systems</div><div class="out">38 payment-page scripts, 3 unauthorised &#183; the capability removed, not governed</div></a><a class="ph" href="../05-access-control-physical-security/05.00-README.md"><div class="num">PHASE 05</div><div class="ttl">Access Control &amp; Physical Security</div><div class="out">The only customized approach, at 8.3.9 &#183; 8.6.2 recorded Not in Place</div></a><a class="ph" href="../06-monitoring-testing-third-parties/06.00-README.md"><div class="num">PHASE 06</div><div class="ttl">Monitoring, Testing &amp; Third Parties</div><div class="out">11.6.1 completes the script control &#183; Q1 ASV failed and was reported as a failure</div></a><a class="ph" href="../07-security-policy-risk-incident-response/07.00-README.md"><div class="num">PHASE 07</div><div class="ttl">Security Policy, Risk &amp; Incident Response</div><div class="out">14 targeted risk analyses &#183; a tabletop that ran 9h20m against an assumed 4</div></a><a class="ph" href="../08-qsa-assessment-roc-production/08.00-README.md"><div class="num">PHASE 08</div><div class="ttl">QSA Assessment &amp; ROC Production</div><div class="out">741-page ROC &#183; AOC filed NON-COMPLIANT 20 days early &#183; compliant at re-assessment</div></a><a class="ph" href="../09-executive-reporting-continuous-compliance/09.00-README.md"><div class="num">PHASE 09</div><div class="ttl">Executive Reporting &amp; Continuous Compliance</div><div class="out">Close forecast missed by 3 &#183; one item unclosed because a provider declined</div></a></div>
+
+<h2>The uncomfortable things, collected</h2>
+<div class="card">
+  <table><thead><tr><th>What</th><th>Where</th></tr></thead><tbody>
+  <tr><td>The first segmentation penetration test <b>failed</b>, latent at 37 stores</td><td>Phase 03</td></tr>
+  <tr><td><b>Two risks were raised on evidence</b> mid-programme, both with exit criteria published before anybody knew whether they would be met</td><td>Phases 02 and 03</td></tr>
+  <tr><td><b>Two compensating controls were argued and refused</b>, producing two Not in Place findings and a non-compliant attestation</td><td>Phases 05 and 06</td></tr>
+  <tr><td>A quarterly <b>ASV scan failed</b> and was reported to the acquirer as a failure rather than quietly rescanned</td><td>Phase 06</td></tr>
+  <tr><td>An unauthenticated administrative interface sat open on a CDE component for <b>176 days</b> &mdash; and Marketa enumerated prior access rather than recording &ldquo;no evidence of access&rdquo;</td><td>Phase 06</td></tr>
+  <tr><td><b>Marketa was wrong about 1.2.8</b> on the assessor&rsquo;s second working day, and the correction is disclosed in the report</td><td>Phase 08</td></tr>
+  <tr><td><b>Three of seven proposed exclusions were refused</b> &mdash; <em>a policy prohibition is not a technical absence</em>, and <em>absence of use is not absence of the thing</em></td><td>Phase 08</td></tr>
+  <tr><td><b>Two open items closed late and are reported as late</b>, by 34 and 40 days</td><td>Phase 09</td></tr>
+  <tr><td><b>One open item did not close, because Truvance declined</b> &mdash; and it is not re-worded into something closable</td><td>Phase 09</td></tr>
+  <tr><td><b>The close forecast was missed by three entries</b>, and the arithmetic is published</td><td>Phase 09</td></tr>
+  <tr><td><b>The incident response plan has never handled a confirmed compromise.</b> One board measure is red and stays red</td><td>Phase 09</td></tr>
+  </tbody></table>
+</div>
+
+<h2>Programme scale</h2>
+<div class="grid g4">
+  <div class="card kpi info"><div class="n">9</div><div class="l">Phases</div></div>
+  <div class="card kpi info"><div class="n">127</div><div class="l">Numbered documents</div></div>
+  <div class="card kpi info"><div class="n">319</div><div class="l">Markdown files</div></div>
+  <div class="card kpi info"><div class="n">37</div><div class="l">Excel trackers</div></div>
+  <div class="card kpi info"><div class="n">36</div><div class="l">ADRs &#183; 0001&ndash;0036</div></div>
+  <div class="card kpi info"><div class="n">30</div><div class="l">Diagram documents</div></div>
+  <div class="card kpi info"><div class="n">27</div><div class="l">Governance records</div></div>
+  <div class="card kpi info"><div class="n">27</div><div class="l">Templates</div></div>
+</div>
+<p class="small"><strong>Every Excel tracker is generated by parsing the narrative markdown, with assertions on the counts.</strong> The Phase 09 builder independently reconstructs all 44 register entries from the Phase 03 baseline and every recorded movement, and asserts the closing position. Pick any number in any workbook and find it in the document it was parsed from &mdash; they cannot disagree.</p>
+
+<footer>
+  <p><strong>PCI DSS is contractual, not statutory.</strong> The PCI Security Standards Council writes the standard and does not enforce it &mdash; enforcement runs from the card brands to the acquirer to the merchant, and Marketa&rsquo;s counterparty is Cardinal Merchant Bank, N.A. <strong>There is no PCI DSS certification for a merchant</strong>; a Report on Compliance and an Attestation of Compliance are a point-in-time attestation about an assessed period, and no attestation is a determination of compliance with any law. A QSA&rsquo;s opinion binds neither an acquirer nor a card brand.</p>
+  <p>Illustrative portfolio sample. All names, figures and findings are fictional. The &ldquo;Confidential &mdash; Cardholder Data Environment&rdquo; classification lines exist for realism and mark nothing real. &#183; <a href="../README.md">Back to repository home</a></p>
+</footer>
+
+</div>
+<script>
+var t=document.getElementById('tt');
+t.addEventListener('click',function(){
+  var d=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme', d?'light':'dark');
+  t.innerHTML = d ? '\u{1F319} Dark mode' : '\u2600\uFE0F Light mode';
+});
+</script>
+</body>
+</html>
